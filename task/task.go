@@ -12,7 +12,7 @@ import (
 type State int
 
 const (
-	PendingState State = iota // Task is queued but is waiting to be scheduled
+	Pending State = iota // Task is queued but is waiting to be scheduled
 	Scheduled
 	Running
 	Completed
@@ -20,7 +20,7 @@ const (
 )
 
 type Task struct {
-	ID            uuid.uuid
+	ID            uuid.UUID
 	ContainerID   string
 	Name          string
 	State         State
