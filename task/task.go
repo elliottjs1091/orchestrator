@@ -4,8 +4,10 @@ import (
 	"time"
 
 	"github.com/docker/go-connections/nat"
-	"github.com/google/uuid" // universally unique identifiers
+	"github.com/google/uuid"
 )
+
+// universally unique identifiers
 
 type State int
 
