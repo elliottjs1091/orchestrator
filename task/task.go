@@ -1,5 +1,14 @@
 package task
+
+import (
+	"time"
+
+	"github.com/docker/go-connections/nat"
+	"github.com/google/uuid" // universally unique identifiers
+)
+
 type State int
+
 const (
 	PendingState State = iota // Task is queued but is waiting to be scheduled
 	Scheduled
@@ -8,22 +17,25 @@ const (
 	Failed
 )
 
-import (
-	"github.com/google/uuid" // universally unique identifiers
-	"github.com/docker/go-connections/nat"
-	"time"
-)
-
 type Task struct {
-	ID uuid.uuid
-	Name string
-	State State
-	Image string
-	Memory int
-	Disk int
-	ExposedPorts nat.PortSet
-	PortBindings map[string]string
+	ID            uuid.uuid
+	ContainerID   string
+	Name          string
+	State         State
+	Image         string
+	CPU           float64
+	Memory        int64
+	Disk          int64
+	ExposedPorts  nat.PortSet
+	PortBindings  map[string]string
 	RestartPolicy string
-	StartTime time.time
-	FinishTime time.Time
+	StartTime     time.Time
+	FinishTime    time.Time
+}
+
+type TaskEvent struct {
+	ID        uuid.UUID
+	State     State
+	Timestamp time.Time
+	Task      Task
 }
