@@ -4,11 +4,13 @@ import (
 	"context"
 	"io"
 	"log"
+	"math"
 	"os"
 	"time"
 
 	"github.com/docker/go-connections/nat"
 	"github.com/google/uuid"
+	"github.com/moby/moby/api/types/container"
 	"github.com/moby/moby/api/types/network"
 	"github.com/moby/moby/client"
 )
@@ -75,7 +77,7 @@ type DockerResult struct {
 	Result      string
 }
 
-func (d *Docker) Run() DockerResult {
+func (d *Docker) Run() DockerResult { // Aliased Docker composite type to d
 	ctx := context.Background()
 	reader, err := d.Client.ImagePull(
 		ctx, d.Config.Image, types.ImagePullOptions{})
@@ -84,6 +86,25 @@ func (d *Docker) Run() DockerResult {
 		return DockerResult{Error: err}
 	}
 	io.Copy(os.Stdout, reader)
+	rp := container.RestartPolicy{
+		Name: d.Config.RestartPolicy,
+	}
+	r := container.Resources{
+		Memory:   d.Config.Memory,
+		NanoCPUs: int64(d.Config.Cpu * math.Pow(10, 0)),
+	}
+	cc := container.Config{
+		Image:        d.Config.Image,
+		Tty:          false,
+		Env:          d.Config.Env,
+		ExposedPorts: d.Config.ExposedPorts,
+	}
+
+	hc := container.HostConfig{
+		RestartPolicy:   rp,
+		Resources:       r,
+		PublishAllPorts: true,
+	}
 }
 
 func (cli *Client) ContainerCreate(
