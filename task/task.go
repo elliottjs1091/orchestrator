@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/docker/docker/api/pkg/stdcopy"
 	"github.com/docker/go-connections/nat"
 	"github.com/google/uuid"
 	"github.com/moby/moby/api/types/container"
@@ -112,6 +113,25 @@ func (d *Docker) Run() DockerResult {
 		return DockerResult{Error: err}
 	}
 
+	err = d.Client.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
+	if err != nil {
+		log.Printf("Error starting container %s: %v\n", resp.ID, err)
+		return DockerResult{Error: err}
+	}
+
+	d.Config.Runtime.ContainerID = resp.ID
+
+	out, err := cli.ContainerLogs(
+		ctx,
+		resp.ID,
+		types.ContainerLogsOptions{ShowStdout: true, ShowStderr: true}
+	)
+	if err != nil {
+		log.Printf("Error getting logs for container %s: %v\n", resp.ID, err)
+		return DockerResult{Error: err}
+	}
+	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
+	return DockerResult{ContainerId: resp.ID, Action: "start", Result: "success"}
 }
 
 func (cli *Client) ContainerCreate(
