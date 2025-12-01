@@ -9,6 +9,7 @@ import (
 
 	"github.com/docker/go-connections/nat"
 	"github.com/google/uuid"
+	"github.com/moby/moby/api/types/network"
 	"github.com/moby/moby/client"
 )
 
@@ -84,3 +85,11 @@ func (d *Docker) Run() DockerResult {
 	}
 	io.Copy(os.Stdout, reader)
 }
+
+func (cli *Client) ContainerCreate(
+	ctx context.Context,
+	config *container.Config,
+	hostConfig *container.HostConfig,
+	networkingConfig *network.NetworkingConfig,
+	platform *specs.Platform,
+	containerName string) (container.ContainerCreateCreatedBody, error)
