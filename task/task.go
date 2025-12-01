@@ -89,7 +89,7 @@ func (d *Docker) Run() DockerResult {
 func (cli *Client) ContainerCreate(
 	ctx context.Context,
 	config *container.Config,
-	hostConfig *container.HostConfig,
-	networkingConfig *network.NetworkingConfig,
-	platform *specs.Platform,
-	containerName string) (container.ContainerCreateCreatedBody, error)
+	hostConfig *container.HostConfig, // Holds the configurations a task requires of the host where the contaienr will run
+	networkingConfig *network.NetworkingConfig, // Unused?
+	platform *specs.Platform, //Unused?
+	containerName string) (container.ContainerCreateCreatedBody, error) // Typed Response object returned by Docker API
