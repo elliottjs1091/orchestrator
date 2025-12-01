@@ -1,6 +1,6 @@
 package scheduler
 
-type Scheduler interface {
+type Scheduler interface { // polymorphism?
 	SelectCandidateNodes()
 	Score()
 	Pick()

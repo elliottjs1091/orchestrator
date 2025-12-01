@@ -12,7 +12,7 @@ import (
 type State int
 
 const (
-	Pending State = iota // Task is queued but is waiting to be scheduled
+	Pending State = iota // Task is queued but is waiting to be scheduled - iota auto-assigns a sequenced value
 	Scheduled
 	Running
 	Completed
@@ -40,4 +40,19 @@ type TaskEvent struct {
 	State     State
 	Timestamp time.Time
 	Task      Task
+}
+
+type Config struct { // Holds configuration for tasks
+	Name           string
+	AttachStdin    bool
+	AttachStdout   bool
+	AttachStderror bool
+	ExposedPorts   nat.PortSet
+	Cmd            []string
+	Image          string
+	Cpu            float64
+	Memory         int64
+	Disk           int64
+	Env            []string
+	RestartPolicy  string
 }
