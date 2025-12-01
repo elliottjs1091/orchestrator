@@ -124,7 +124,7 @@ func (d *Docker) Run() DockerResult {
 	out, err := cli.ContainerLogs(
 		ctx,
 		resp.ID,
-		types.ContainerLogsOptions{ShowStdout: true, ShowStderr: true}
+		types.ContainerLogsOptions{ShowStdout: true, ShowStderr: true},
 	)
 	if err != nil {
 		log.Printf("Error getting logs for container %s: %v\n", resp.ID, err)
@@ -143,15 +143,15 @@ func (d *Docker) Stop(id string) DockerResult {
 	}
 	err = d.Client.ContainerRemove(ctx, id, types.ContainerRemoveOptions{
 		RemoveVolumes: true,
-		RemoveLinks: false,
-		Force: false,
+		RemoveLinks:   false,
+		Force:         false,
 	})
 	if err != nil {
 		log.Printf("Error removing container %s: %v\n", id, err)
 		return DockerResult{Error: err}
 	}
 
-	return DockerResult{Action: "stop", Result "success", Error: nil}
+	return DockerResult{Action: "stop", Result: "success", Error: nil}
 }
 func (cli *Client) ContainerCreate(
 	ctx context.Context,
