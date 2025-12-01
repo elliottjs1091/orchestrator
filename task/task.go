@@ -77,7 +77,7 @@ type DockerResult struct {
 	Result      string
 }
 
-func (d *Docker) Run() DockerResult { // Aliased Docker composite type to d
+func (d *Docker) Run() DockerResult {
 	ctx := context.Background()
 	reader, err := d.Client.ImagePull(
 		ctx, d.Config.Image, types.ImagePullOptions{})
@@ -105,6 +105,13 @@ func (d *Docker) Run() DockerResult { // Aliased Docker composite type to d
 		Resources:       r,
 		PublishAllPorts: true,
 	}
+
+	resp, err := d.Client.ContainerCreate(ctx, &cc, &hc, nil, nil, d.Config.Name)
+	if err != nil {
+		log.Printf("Error creating container using image %s: %v\n", d.Config.Image, err)
+		return DockerResult{Error: err}
+	}
+
 }
 
 func (cli *Client) ContainerCreate(
